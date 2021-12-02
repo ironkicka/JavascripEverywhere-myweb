@@ -1,7 +1,6 @@
 // import React and our routing dependencies
-import React from 'react';
 import { useQuery, gql } from '@apollo/client';
-import {BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Redirect, Switch, withRouter} from 'react-router-dom';
 
 // import our shared layout component
 import Layout from '../components/Layout';
@@ -11,17 +10,20 @@ import Home from './home';
 import MyNotes from './mynotes';
 import Favorites from './favorites';
 import NotePage from "./note";
+import SignUp from "./signUp";
+import SignIn from "./signIn";
+import React, {Component} from "react";
 // import Note from './note';
 // import SignUp from './signup';
 // import SignIn from './signin';
 // import NewNote from './new';
 // import EditNote from './edit';
 
-// const IS_LOGGED_IN = gql`
-//     {
-//         isLoggedIn @client
-//     }
-// `;
+const IS_LOGGED_IN = gql`
+    {
+        isLoggedIn @client
+    }
+`;
 
 // define our routes
 const Pages = () => {
@@ -30,11 +32,11 @@ const Pages = () => {
             <Layout>
                 <Switch>
                 <Route exact path="/" component={Home} />
-                <Route path="/mynotes" component={MyNotes} />
-                <Route path="/favorites" component={Favorites} />
+                <PrivateRoute path="/mynotes" component={MyNotes} />
+                <PrivateRoute path="/favorites" component={Favorites} />
                 <Route path="/note/:id" component={NotePage} />
-                {/*<Route path="/signup" component={SignUp} />*/}
-                {/*<Route path="/signin" component={SignIn} />*/}
+                <Route path="/signup" component={SignUp} />
+                <Route path="/signin" component={SignIn} />
                 {/*<PrivateRoute path="/new" component={NewNote} />*/}
                 {/*<PrivateRoute path="/edit/:id" component={EditNote} />*/}
                 </Switch>
@@ -43,29 +45,26 @@ const Pages = () => {
     );
 };
 
-// const PrivateRoute = ({ component: Component, ...rest }) => {
-//     const { loading, error, data } = useQuery(IS_LOGGED_IN);
-//     // if the data is loading, display a loading message
-//     if (loading) return <p>Loading...</p>;
-//     // if there is an error fetching the data, display an error message
-//     if (error) return <p>Error!</p>;
-//     return (
-//         <Route
-//             {...rest}
-//             render={props =>
-//                 data.isLoggedIn === true ? (
-//                     <Component {...props} />
-//                 ) : (
-//                     <Redirect
-//                         to={{
-//                             pathname: '/signin',
-//                             state: { from: props.location }
-//                         }}
-//                     />
-//                 )
-//             }
-//         />
-//     );
-// };
+const PrivateRouteBase = ({Component,...rest}:any) => {
+    const { loading, error, data } = useQuery(IS_LOGGED_IN);
+    // if the data is loading, display a loading message
+    if (loading) return <p>Loading...</p>;
+    // if there is an error fetching the data, display an error message
+    if (error) return <p>Error!</p>;
+    if(!data.isLoggedIn){
+        rest.history.push('/signIn');
+    }
+    return (
+        <Route
+            {...rest}
+            render={props =>
+                    <Component {...props}/>
+            }
+        />
+    );
+};
+
+const PrivateRoute =withRouter(PrivateRouteBase);
+
 
 export default Pages;

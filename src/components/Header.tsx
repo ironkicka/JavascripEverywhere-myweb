@@ -3,8 +3,15 @@ import styled from 'styled-components';
 // @ts-ignore
 import logo from '../img/logo.svg';
 // const logo = new URL('../img/logo.svg', import.meta.url) as string;
-import { useQuery } from '@apollo/client';
+import {gql, useQuery} from '@apollo/client';
 import { Link, withRouter } from 'react-router-dom';
+import ButtonAsLink from "./ButtonAsLink";
+
+const IS_LOGGED_IN = gql`
+    {
+        isLoggedIn @client
+    }
+`;
 
 const HeaderBar = styled.header`
   width: 100%;
@@ -30,36 +37,36 @@ const UserState = styled.div`
 
 const Header = (props:any) => {
     // query hook for user logged in state
-    // const { data, client } = useQuery(IS_LOGGED_IN);
+    const { data, client } = useQuery(IS_LOGGED_IN);
 
     return (
         <HeaderBar>
             <img src={logo} alt="Notedly Logo" height="40" />
             <LogoText>Notedly</LogoText>
-            {/* If logged in display a log out link, else display sign in options */}
-            {/*<UserState>*/}
-            {/*    {data.isLoggedIn ? (*/}
-            {/*        <ButtonAsLink*/}
-            {/*            onClick={() => {*/}
-            {/*                // remove the token*/}
-            {/*                localStorage.removeItem('token');*/}
-            {/*                // clear the application's cache*/}
-            {/*                client.resetStore();*/}
-            {/*                // update local state*/}
-            {/*                client.writeData({ data: { isLoggedIn: false } });*/}
-            {/*                // redirect the user to the homepage*/}
-            {/*                props.history.push('/');*/}
-            {/*            }}*/}
-            {/*        >*/}
-            {/*            Logout*/}
-            {/*        </ButtonAsLink>*/}
-            {/*    ) : (*/}
-            {/*        <p>*/}
-            {/*            <Link to={'/signin'}>Sign In</Link> or{' '}*/}
-            {/*            <Link to={'/signup'}>Sign Up</Link>*/}
-            {/*        </p>*/}
-            {/*    )}*/}
-            {/*</UserState>*/}
+             {/*If logged in display a log out link, else display sign in options*/}
+            <UserState>
+                {data.isLoggedIn ? (
+                    <ButtonAsLink
+                        onClick={() => {
+                            // remove the token
+                            localStorage.removeItem('token');
+                            // clear the application's cache
+                            client.resetStore();
+                            // update local state
+                            client.writeData({ data: { isLoggedIn: false } });
+                            // redirect the user to the homepage
+                            props.history.push('/');
+                        }}
+                    >
+                        Logout
+                    </ButtonAsLink>
+                ) : (
+                    <p>
+                        <Link to={'/signin'}>Sign In</Link> or{' '}
+                        <Link to={'/signup'}>Sign Up</Link>
+                    </p>
+                )}
+            </UserState>
         </HeaderBar>
     );
 };

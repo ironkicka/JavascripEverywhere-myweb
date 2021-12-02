@@ -31,5 +31,8 @@
     "react-router-dom": "5.1.2",
     "styled-components": "4.4.1",
     "styled-normalize": "^8.0.7"
-  }
+  },
+  "browserslist": [
+    "since 2017-06"
+  ]
 }
