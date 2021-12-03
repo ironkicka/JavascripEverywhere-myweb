@@ -11,7 +11,7 @@ const EditNote = (props:any) => {
     const id = props.match.params.id;
     // define our note query
     const { loading, error, data } = useQuery(GET_NOTE, { variables: { id } });
-    const userdata = useQuery(GET_ME);
+    const {data:userdata,loading:userDataloading} = useQuery(GET_ME);
     // define our mutation
     const [editNote] = useMutation(EDIT_NOTE, {
         variables: {
@@ -23,11 +23,11 @@ const EditNote = (props:any) => {
     });
 
     // if the data is loading, display a loading message
-    if (loading||userdata.loading) return 'Loading...';
+    if (loading||userDataloading) return 'Loading...';
     // if there is an error fetching the data, display an error message
     if (error) return <p>Error!</p>;
     // if the current user and the author of the note do not match
-    if (userdata.data.me.id !== data.note.author.id) {
+    if (userdata.me.id !== data.note.author.id) {
         return <p>You do not have access to edit this note</p>;
     }
 
