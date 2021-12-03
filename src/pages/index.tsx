@@ -13,17 +13,14 @@ import NotePage from "./note";
 import SignUp from "./signUp";
 import SignIn from "./signIn";
 import React, {Component} from "react";
+import NewNote from "./new";
+import {IS_LOGGED_IN} from "../gql/query";
+import EditNote from "./edit";
 // import Note from './note';
 // import SignUp from './signup';
 // import SignIn from './signin';
 // import NewNote from './new';
 // import EditNote from './edit';
-
-const IS_LOGGED_IN = gql`
-    {
-        isLoggedIn @client
-    }
-`;
 
 // define our routes
 const Pages = () => {
@@ -37,8 +34,8 @@ const Pages = () => {
                 <Route path="/note/:id" component={NotePage} />
                 <Route path="/signup" component={SignUp} />
                 <Route path="/signin" component={SignIn} />
-                {/*<PrivateRoute path="/new" component={NewNote} />*/}
-                {/*<PrivateRoute path="/edit/:id" component={EditNote} />*/}
+                <PrivateRoute path="/new" component={NewNote} />
+                <PrivateRoute path="/edit/:id" component={EditNote} />
                 </Switch>
             </Layout>
         </Router>
