@@ -11,38 +11,42 @@ const Home = () => {
     if (loading) return <p>Loading...</p>;
     // if there is an error fetching the data, display an error message
     if (error) return <p>Error!</p>;
-    return (
-        <>
-            <NoteFeed notes={data.noteFeed.notes}/>
-            {data.noteFeed.hasNextPage &&(
-                <Button
-                    onClick={()=>{
-                        fetchMore({
-                            variables:{
-                                cursor:data.noteFeed.cursor
-                            },
-                            updateQuery:(previousResult,{fetchMoreResult})=>{
-                                return{
-                                    noteFeed:{
-                                        cursor:fetchMoreResult.noteFeed.cursor,
-                                        hasNextPage:fetchMoreResult.noteFeed.hasNextPage,
-                                        notes:[
-                                            ...previousResult.noteFeed.notes,
-                                            ...fetchMoreResult.noteFeed.notes
-                                        ],
-                                        __typename:'noteFeed',
+    if(data.noteFeed.length !== 0) {
+        return (
+            <>
+                <NoteFeed notes={data.noteFeed.notes}/>
+                {data.noteFeed.hasNextPage && (
+                    <Button
+                        onClick={() => {
+                            fetchMore({
+                                variables: {
+                                    cursor: data.noteFeed.cursor
+                                },
+                                updateQuery: (previousResult, {fetchMoreResult}) => {
+                                    return {
+                                        noteFeed: {
+                                            cursor: fetchMoreResult.noteFeed.cursor,
+                                            hasNextPage: fetchMoreResult.noteFeed.hasNextPage,
+                                            notes: [
+                                                ...previousResult.noteFeed.notes,
+                                                ...fetchMoreResult.noteFeed.notes
+                                            ],
+                                            __typename: 'noteFeed',
+                                        }
                                     }
                                 }
-                            }
-                        })
-                    }}
-                >
-                    Load more
-                </Button>
-            )}
-        </>
+                            })
+                        }}
+                    >
+                        Load more
+                    </Button>
+                )}
+            </>
 
-    )
+        )
+    }else{
+        return <p>No notes yet</p>;
+    }
 };
 
 export default Home;
