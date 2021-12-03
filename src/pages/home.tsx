@@ -11,7 +11,7 @@ const Home = () => {
     if (loading) return <p>Loading...</p>;
     // if there is an error fetching the data, display an error message
     if (error) return <p>Error!</p>;
-    if(data.noteFeed.length !== 0) {
+    if(data.noteFeed.notes.length !== 0) {
         return (
             <>
                 <NoteFeed notes={data.noteFeed.notes}/>
