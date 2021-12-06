@@ -13,9 +13,9 @@ const Favorites = () => {
     const { loading, error, data } = useQuery(GET_MY_FAVORITES);
 
     // if the data is loading, our app will display a loading message
-    if (loading) return 'Loading...';
+    if (loading) return <p>{'Loading...'}</p>;
     // if there is an error fetching the data, display an error message
-    if (error) return `Error! ${error.message}`;
+    if (error) return <p>{`Error! ${error.message}`}</p>;
     // if the query is successful and there are notes, return the feed of notes
     // else if the query is successful and there aren't notes, display a message
     if (data.me.favorites.length !== 0) {
