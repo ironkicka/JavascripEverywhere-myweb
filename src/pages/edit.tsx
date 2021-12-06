@@ -23,7 +23,7 @@ const EditNote = (props:any) => {
     });
 
     // if the data is loading, display a loading message
-    if (loading||userDataloading) return 'Loading...';
+    if (loading||userDataloading) return <p>{'Loading...'}</p>;
     // if there is an error fetching the data, display an error message
     if (error) return <p>Error!</p>;
     // if the current user and the author of the note do not match

@@ -1,6 +1,14 @@
 // import React and our routing dependencies
 import { useQuery, gql } from '@apollo/client';
-import {BrowserRouter as Router, Route, Redirect, Switch, withRouter} from 'react-router-dom';
+import {
+    RouteComponentProps,
+    BrowserRouter as Router,
+    Route,
+    Redirect,
+    Switch,
+    withRouter,
+    RouteProps
+} from 'react-router-dom';
 
 // import our shared layout component
 import Layout from '../components/Layout';
@@ -12,15 +20,10 @@ import Favorites from './favorites';
 import NotePage from "./note";
 import SignUp from "./signUp";
 import SignIn from "./signIn";
-import React, {Component} from "react";
+import React from "react";
 import NewNote from "./new";
 import {IS_LOGGED_IN} from "../gql/query";
 import EditNote from "./edit";
-// import Note from './note';
-// import SignUp from './signup';
-// import SignIn from './signin';
-// import NewNote from './new';
-// import EditNote from './edit';
 
 // define our routes
 const Pages = () => {
@@ -42,26 +45,21 @@ const Pages = () => {
     );
 };
 
-const PrivateRouteBase = ({Component,...rest}:any) => {
+const PrivateRoute = withRouter((props:RouteComponentProps & RouteProps) => {
     const { loading, error, data } = useQuery(IS_LOGGED_IN);
     // if the data is loading, display a loading message
     if (loading) return <p>Loading...</p>;
     // if there is an error fetching the data, display an error message
     if (error) return <p>Error!</p>;
     if(!data.isLoggedIn){
-        rest.history.push('/signIn');
+        props.history.push('/signIn');
     }
     return (
         <Route
-            {...rest}
-            render={props =>
-                    <Component {...props}/>
-            }
+            {...props}
         />
     );
-};
-
-const PrivateRoute =withRouter(PrivateRouteBase);
+});
 
 
 export default Pages;
